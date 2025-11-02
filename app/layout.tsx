@@ -14,12 +14,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Deeza Agent",
+  title: "Deeza",
   description: "Deposit gifts on Somnia blockchain",
   icons: {
-    icon: '/Deeza DJ Logo Design.png',
-    shortcut: '/Deeza DJ Logo Design.png',
-    apple: '/Deeza DJ Logo Design.png',
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
   },
 };
 
