@@ -51,6 +51,32 @@ function DepositContent() {
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
   const [tokenDecimals, setTokenDecimals] = useState<number>(18);
 
+  // Helper function to parse and format error messages
+  const formatError = (error: any): string => {
+    const errorMessage = error?.message || error?.shortMessage || String(error);
+    
+    // Check for circuit breaker error
+    if (errorMessage.toLowerCase().includes('circuit breaker')) {
+      return 'Token transfers are currently paused. The token contract has activated its circuit breaker (safety mechanism). Please try again later or contact the token issuer.';
+    }
+    
+    // Check for revert reasons
+    if (errorMessage.includes('reverted') || errorMessage.includes('revert')) {
+      // Try to extract the revert reason
+      const revertReasonMatch = errorMessage.match(/reason:?\s*([^]+?)(?:\n|$)/i);
+      if (revertReasonMatch) {
+        const reason = revertReasonMatch[1].trim();
+        if (reason.toLowerCase().includes('circuit breaker')) {
+          return 'Token transfers are paused. Circuit breaker is active. Please try again later.';
+        }
+        return `Transaction failed: ${reason}`;
+      }
+      return 'Transaction was rejected by the token contract. Please check your balance and try again.';
+    }
+    
+    return errorMessage || 'An unknown error occurred';
+  };
+
   // Load URL parameters on mount
   useEffect(() => {
     const giftParam = searchParams?.get('gift');
@@ -261,7 +287,7 @@ function DepositContent() {
       }
     } catch (err: any) {
       console.error('Deposit error:', err);
-      setError(err.message || 'Deposit failed');
+      setError(formatError(err));
       setLoading(false);
     }
   };
@@ -269,7 +295,7 @@ function DepositContent() {
   useEffect(() => {
     if (writeError) {
       console.error('Write contract error:', writeError);
-      setError(writeError.message || 'Transaction failed');
+      setError(formatError(writeError));
       setLoading(false);
     }
   }, [writeError]);
@@ -277,7 +303,7 @@ function DepositContent() {
   useEffect(() => {
     if (approveError) {
       console.error('Approve error:', approveError);
-      setError(approveError.message || 'Approval failed');
+      setError(formatError(approveError));
       setLoading(false);
     }
   }, [approveError]);
