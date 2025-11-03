@@ -17,7 +17,7 @@ export const SOMNIA_MAINNET = {
 export const CHAIN_CONFIG = SOMNIA_TESTNET;
 
 // Contract Address
-export const CONTRACT_ADDRESS = '0xeF9033DAFd37f3b32bE31342ef5dEaE51dFd35ed' as const;
+export const CONTRACT_ADDRESS = '0x6A1AC6E5c7aDD3db3713b9520AE2Cd1c1B44b682' as const;
 
 // Contract ABI
 export const CONTRACT_ABI = [
